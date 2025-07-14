@@ -1,0 +1,257 @@
+# Cross-Platform Discussion Forum App - Complete Development Prompt
+
+## Project Overview
+Create a modern, cross-platform discussion forum mobile application similar to Reddit and Quora, with a focus on local/cultural relevance for Botswana and Southern Africa. The app should foster meaningful discussions, knowledge sharing, and community building.
+
+## Core Vision
+- **Primary Goal**: Build a culturally-rooted, respectful forum for open discussion and wisdom sharing
+- **Target Audience**: Botswana and Southern African communities, with emphasis on youth empowerment, education, and entrepreneurship
+- **Unique Value**: Blend of modern forum features with traditional wisdom-sharing and mentorship elements
+
+## Platform Requirements
+- **Cross-Platform**: Single codebase supporting both Android and iOS
+- **Responsive Design**: Optimized for mobile-first experience
+- **Offline Capabilities**: Basic offline reading and draft saving
+- **Performance**: Smooth scrolling, fast loading, efficient memory usage
+
+## Technical Stack Recommendations
+
+### Frontend (Cross-Platform)
+- **Framework**: React Native with Expo
+- **State Management**: Redux Toolkit or Zustand
+- **Navigation**: React Navigation v6
+- **UI Components**: NativeBase, Tamagui, or custom components with react-native-elements
+- **Styling**: Styled-components or Tailwind CSS (via NativeWind)
+- **Authentication**: Expo Auth Session or Firebase Auth
+- **Networking**: Axios or React Query/TanStack Query
+- **Local Storage**: AsyncStorage or Expo SecureStore
+
+### Backend
+- **Runtime**: Node.js
+- **Framework**: Express.js or Fastify
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: JWT tokens with refresh token rotation
+- **File Storage**: AWS S3 or Cloudinary for images
+- **Real-time**: Socket.io for live updates
+- **Search**: Elasticsearch or PostgreSQL full-text search
+- **Caching**: Redis for session management and caching
+
+### Infrastructure
+- **Backend Hosting**: Railway, Render, or AWS
+- **Database**: Supabase, PlanetScale, or AWS RDS
+- **CDN**: CloudFront or Cloudflare
+- **Monitoring**: Sentry for error tracking
+- **Analytics**: Mixpanel or Google Analytics
+- **Push Notifications**: Expo Push Notifications or Firebase Cloud Messaging
+
+## Core Features
+
+### 1. User Authentication & Profiles
+- **Registration**: Email, Google, Apple Sign-in
+- **Anonymous Mode**: Allow anonymous posting with session-based tracking
+- **Profile System**: 
+  - Basic info (name, location, bio)
+  - Verification badges (Elder, Mentor, Expert)
+  - Reputation score based on community engagement
+  - Activity history and statistics
+- **Privacy Settings**: Control visibility of profile information
+
+### 2. Post System
+- **Post Types**:
+  - Text posts with rich formatting
+  - Image posts with captions
+  - Poll posts with multiple choice options
+  - Question posts (Quora-style)
+  - Link sharing with preview
+- **Content Creation**:
+  - Rich text editor with markdown support
+  - Image upload with compression
+  - Draft saving and auto-save
+  - Character limits and content guidelines
+- **Categories/Tags**: Predefined and custom tags for organization
+
+### 3. Engagement System
+- **Voting**: Upvote/downvote or "appreciate" reactions
+- **Comments**: Threaded comment system with nested replies
+- **Reactions**: Emoji reactions for nuanced feedback
+- **Sharing**: Internal sharing and external social media integration
+- **Bookmarking**: Save posts for later reading
+
+### 4. Community Features
+- **Tribes/Groups**: 
+  - Location-based communities (villages, cities)
+  - Interest-based groups (business, culture, education)
+  - Private and public group options
+- **Mentorship System**:
+  - Verified Elder/Mentor profiles
+  - Mentorship matching
+  - Wisdom archive for valuable advice
+- **Debate Mode**: Structured debates with rules and moderation
+
+### 5. Search & Discovery
+- **Search Functionality**:
+  - Full-text search across posts and comments
+  - Filter by category, date, location, user
+  - Advanced search with multiple criteria
+- **Content Discovery**:
+  - Trending topics and posts
+  - Personalized recommendations
+  - Featured content from verified mentors
+
+### 6. Moderation System
+- **Community Moderation**:
+  - User reporting system
+  - Community-driven moderation with voting
+  - Automatic content filtering
+- **Admin Controls**:
+  - Content removal and user management
+  - Analytics dashboard
+  - Moderation queue and tools
+
+## Unique Features
+
+### 1. Cultural Integration
+- **Language Support**: Setswana and English with easy switching
+- **Cultural Context**: Understanding of local customs and communication styles
+- **Traditional Wisdom**: Special category for cultural knowledge and proverbs
+
+### 2. Verification System
+- **Elder Verification**: Special status for community elders and respected figures
+- **Expert Badges**: Verification for professionals in specific fields
+- **Community Leaders**: Recognition for active, positive contributors
+
+### 3. Wisdom Archive
+- **Knowledge Base**: Convert popular advice and discussions into searchable archives
+- **Life Lessons**: Curated collection of valuable life advice
+- **Success Stories**: Platform for sharing and celebrating achievements
+
+### 4. Anonymous Features
+- **Anonymous Confessions**: Safe space for sensitive discussions
+- **Anonymous Questions**: Encourage honest questioning without judgment
+- **Privacy Protection**: Strong anonymization features
+
+## User Experience Design
+
+### Navigation Structure
+- **Bottom Tab Navigation**:
+  - Home/Feed
+  - Search/Discover
+  - Create Post
+  - Notifications
+  - Profile
+- **Side Menu**: Settings, Groups, Saved Posts, Help
+
+### Feed Algorithm
+- **Personalization**: Based on user interests and engagement
+- **Local Relevance**: Prioritize location-based content
+- **Quality Control**: Promote well-moderated, high-quality discussions
+- **Diversity**: Ensure varied content types and perspectives
+
+### Accessibility
+- **Screen Reader Support**: Full VoiceOver and TalkBack compatibility
+- **High Contrast Mode**: Support for users with visual impairments
+- **Font Scaling**: Adjustable text sizes
+- **Color Blind Friendly**: Accessible color schemes
+
+## Technical Implementation Requirements
+
+### Performance Optimization
+- **Lazy Loading**: Implement pagination and infinite scrolling
+- **Image Optimization**: Compress and resize images automatically
+- **Caching Strategy**: Cache frequently accessed data
+- **Bundle Optimization**: Code splitting and tree shaking
+
+### Security Features
+- **Data Encryption**: Encrypt sensitive user data
+- **API Security**: Rate limiting, authentication, and input validation
+- **Content Security**: XSS protection and content sanitization
+- **Privacy Compliance**: GDPR and local privacy law compliance
+
+### Scalability Planning
+- **Database Optimization**: Efficient queries and indexing
+- **Microservices Architecture**: Modular backend design
+- **CDN Integration**: Global content delivery
+- **Load Balancing**: Handle increasing user base
+
+## Development Phases
+
+### Phase 1: MVP (Months 1-3)
+- Basic user authentication
+- Simple post creation and viewing
+- Basic commenting system
+- Simple upvote/downvote
+- Basic search functionality
+
+### Phase 2: Core Features (Months 4-6)
+- Advanced post types (images, polls)
+- Threaded comments
+- User profiles and reputation
+- Push notifications
+- Basic moderation tools
+
+### Phase 3: Community Features (Months 7-9)
+- Groups/Tribes functionality
+- Mentorship system
+- Verification badges
+- Advanced search and discovery
+- Improved moderation
+
+### Phase 4: Advanced Features (Months 10-12)
+- Debate mode
+- Wisdom archive
+- Advanced analytics
+- AI-powered content recommendations
+- Multi-language support
+
+## Testing Strategy
+- **Unit Testing**: Jest for backend, React Native Testing Library for frontend
+- **Integration Testing**: API endpoint testing
+- **End-to-End Testing**: Detox for React Native
+- **Performance Testing**: Load testing for backend
+- **Device Testing**: Test on various Android and iOS devices
+
+## Deployment Strategy
+- **Beta Testing**: Closed beta with select community members
+- **App Store Submission**: Prepare for both Google Play and Apple App Store
+- **Gradual Rollout**: Phased release to manage server load
+- **Continuous Integration**: Automated testing and deployment pipelines
+
+## Success Metrics
+- **User Engagement**: Daily/Monthly active users, session duration
+- **Content Quality**: Post engagement rates, moderation actions
+- **Community Growth**: New user acquisition, retention rates
+- **Cultural Impact**: Local language usage, elder participation
+- **Technical Performance**: App performance, crash rates, load times
+
+## Monetization Strategy (Future)
+- **Freemium Model**: Basic free, premium features for power users
+- **Local Business Integration**: Promoted posts for local businesses
+- **Educational Partnerships**: Premium content from educational institutions
+- **Mentor Subscriptions**: Paid access to verified mentors
+
+## Risk Mitigation
+- **Content Moderation**: Robust systems to prevent harmful content
+- **Technical Scalability**: Plan for rapid user growth
+- **Cultural Sensitivity**: Ensure respectful handling of local customs
+- **Legal Compliance**: Adhere to local and international regulations
+
+## Getting Started Checklist
+1. Set up development environment (Node.js, React Native, Expo)
+2. Create project structure and initial repository
+3. Set up database schema and API endpoints
+4. Implement basic authentication system
+5. Create initial UI components and navigation
+6. Implement core posting and commenting features
+7. Add search and discovery functionality
+8. Implement moderation and safety features
+9. Add push notifications and real-time features
+10. Prepare for beta testing and deployment
+
+## Additional Considerations
+- **Localization**: Prepare for easy addition of more African languages
+- **Offline Functionality**: Essential for areas with poor connectivity
+- **Data Usage**: Optimize for users with limited data plans
+- **Battery Optimization**: Ensure efficient battery usage
+- **Cross-Platform Consistency**: Maintain similar experience across platforms
+
+This comprehensive prompt provides a roadmap for building a culturally-relevant, technically robust discussion forum app that can serve the Botswana and Southern African communities while competing with global platforms through local relevance and unique features.
