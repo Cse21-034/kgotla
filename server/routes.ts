@@ -308,6 +308,356 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Payment settings routes
+  app.get('/api/payment-settings', async (req, res) => {
+    try {
+      const settings = await storage.getPaymentSettings();
+      res.json(settings);
+    } catch (error) {
+      console.error('Error fetching payment settings:', error);
+      res.status(500).json({ message: 'Failed to fetch payment settings' });
+    }
+  });
+
+  app.post('/api/payment-settings', async (req, res) => {
+    try {
+      const newSetting = await storage.createPaymentSetting(req.body);
+      res.json(newSetting);
+    } catch (error) {
+      console.error('Error creating payment setting:', error);
+      res.status(500).json({ message: 'Failed to create payment setting' });
+    }
+  });
+
+  app.put('/api/payment-settings/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updatedSetting = await storage.updatePaymentSetting(id, req.body);
+      res.json(updatedSetting);
+    } catch (error) {
+      console.error('Error updating payment setting:', error);
+      res.status(500).json({ message: 'Failed to update payment setting' });
+    }
+  });
+
+  // App configuration routes
+  app.get('/api/app-config', async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const config = await storage.getAppConfig(category);
+      res.json(config);
+    } catch (error) {
+      console.error('Error fetching app config:', error);
+      res.status(500).json({ message: 'Failed to fetch app config' });
+    }
+  });
+
+  app.put('/api/app-config/:key', async (req, res) => {
+    try {
+      const key = req.params.key;
+      const { value } = req.body;
+      const updatedConfig = await storage.updateAppConfig(key, value);
+      res.json(updatedConfig);
+    } catch (error) {
+      console.error('Error updating app config:', error);
+      res.status(500).json({ message: 'Failed to update app config' });
+    }
+  });
+
+  // Subscription routes
+  app.get('/api/subscriptions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const subscriptions = await storage.getSubscriptions(userId);
+      res.json(subscriptions);
+    } catch (error) {
+      console.error('Error fetching subscriptions:', error);
+      res.status(500).json({ message: 'Failed to fetch subscriptions' });
+    }
+  });
+
+  app.post('/api/subscriptions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const subscription = await storage.createSubscription({
+        ...req.body,
+        userId
+      });
+      res.json(subscription);
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+      res.status(500).json({ message: 'Failed to create subscription' });
+    }
+  });
+
+  // Tips routes
+  app.get('/api/tips', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const tips = await storage.getTips(userId);
+      res.json(tips);
+    } catch (error) {
+      console.error('Error fetching tips:', error);
+      res.status(500).json({ message: 'Failed to fetch tips' });
+    }
+  });
+
+  app.post('/api/tips', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const tip = await storage.createTip({
+        ...req.body,
+        fromUserId: userId
+      });
+      res.json(tip);
+    } catch (error) {
+      console.error('Error creating tip:', error);
+      res.status(500).json({ message: 'Failed to create tip' });
+    }
+  });
+
+  // Marketplace routes
+  app.get('/api/marketplace', async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 20;
+      const offset = parseInt(req.query.offset as string) || 0;
+      const items = await storage.getMarketplaceItems(limit, offset);
+      res.json(items);
+    } catch (error) {
+      console.error('Error fetching marketplace items:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace items' });
+    }
+  });
+
+  app.post('/api/marketplace', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const item = await storage.createMarketplaceItem({
+        ...req.body,
+        sellerId: userId
+      });
+      res.json(item);
+    } catch (error) {
+      console.error('Error creating marketplace item:', error);
+      res.status(500).json({ message: 'Failed to create marketplace item' });
+    }
+  });
+
+  // Transactions routes
+  app.get('/api/transactions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const transactions = await storage.getTransactions(userId, limit);
+      res.json(transactions);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+      res.status(500).json({ message: 'Failed to fetch transactions' });
+    }
+  });
+
+  app.post('/api/transactions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const transaction = await storage.createTransaction({
+        ...req.body,
+        userId
+      });
+      res.json(transaction);
+    } catch (error) {
+      console.error('Error creating transaction:', error);
+      res.status(500).json({ message: 'Failed to create transaction' });
+    }
+  });
+
+  // Tips routes
+  app.get('/api/tips', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const tips = await storage.getTips(userId);
+      res.json(tips);
+    } catch (error) {
+      console.error('Error fetching tips:', error);
+      res.status(500).json({ message: 'Failed to fetch tips' });
+    }
+  });
+
+  app.post('/api/tips', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const { toUserId, postId, commentId, amount, currency, paymentMethod, message } = req.body;
+
+      // Validate required fields
+      if (!toUserId || !amount || amount <= 0) {
+        return res.status(400).json({ message: 'Invalid tip data' });
+      }
+
+      // Create tip record
+      const tip = await storage.createTip({
+        fromUserId: userId,
+        toUserId,
+        postId: postId || null,
+        commentId: commentId || null,
+        amount,
+        currency: currency || 'USD',
+        paymentMethod: paymentMethod || 'stripe',
+        message: message || null,
+        status: 'pending'
+      });
+
+      // Create transaction record
+      await storage.createTransaction({
+        userId,
+        type: 'tip_sent',
+        amount: -amount,
+        currency: currency || 'USD',
+        description: `Tip sent to user ${toUserId}`,
+        relatedId: tip.id.toString(),
+        paymentMethod: paymentMethod || 'stripe',
+        status: 'completed'
+      });
+
+      // Create transaction for recipient
+      await storage.createTransaction({
+        userId: toUserId,
+        type: 'tip_received',
+        amount,
+        currency: currency || 'USD',
+        description: `Tip received from user ${userId}`,
+        relatedId: tip.id.toString(),
+        paymentMethod: paymentMethod || 'stripe',
+        status: 'completed'
+      });
+
+      // Award wisdom points to recipient
+      const wisdomPoints = Math.floor(amount / 100 * 10); // 10 points per dollar
+      await storage.createWisdomTransaction({
+        userId: toUserId,
+        type: 'tip_received',
+        points: wisdomPoints,
+        description: `Wisdom points from tip received`,
+        relatedId: tip.id.toString()
+      });
+
+      await storage.updateUserWisdomPoints(toUserId, wisdomPoints);
+
+      res.json({ ...tip, wisdomPointsAwarded: wisdomPoints });
+    } catch (error) {
+      console.error('Error creating tip:', error);
+      res.status(500).json({ message: 'Failed to create tip' });
+    }
+  });
+
+  // Subscriptions routes
+  app.get('/api/subscriptions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const subscriptions = await storage.getSubscriptions(userId);
+      res.json(subscriptions);
+    } catch (error) {
+      console.error('Error fetching subscriptions:', error);
+      res.status(500).json({ message: 'Failed to fetch subscriptions' });
+    }
+  });
+
+  app.post('/api/subscriptions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const { plan, currency, amount, paymentMethod, billing } = req.body;
+
+      // Validate required fields
+      if (!plan || !amount || amount <= 0) {
+        return res.status(400).json({ message: 'Invalid subscription data' });
+      }
+
+      // Create subscription record
+      const subscription = await storage.createSubscription({
+        userId,
+        plan,
+        status: 'active',
+        billing: billing || 'monthly',
+        amount,
+        currency: currency || 'USD',
+        paymentMethod: paymentMethod || 'stripe',
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        cancelAtPeriodEnd: false
+      });
+
+      // Create transaction record
+      await storage.createTransaction({
+        userId,
+        type: 'subscription_payment',
+        amount: -amount,
+        currency: currency || 'USD',
+        description: `${plan} subscription payment`,
+        relatedId: subscription.id.toString(),
+        paymentMethod: paymentMethod || 'stripe',
+        status: 'completed'
+      });
+
+      // Award wisdom points for subscription
+      const wisdomPoints = Math.floor(amount / 100 * 50); // 50 points per dollar for subscriptions
+      await storage.createWisdomTransaction({
+        userId,
+        type: 'subscription_reward',
+        points: wisdomPoints,
+        description: `Wisdom points from ${plan} subscription`,
+        relatedId: subscription.id.toString()
+      });
+
+      await storage.updateUserWisdomPoints(userId, wisdomPoints);
+
+      res.json({ ...subscription, wisdomPointsAwarded: wisdomPoints });
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+      res.status(500).json({ message: 'Failed to create subscription' });
+    }
+  });
+
+  app.put('/api/subscriptions/:id/cancel', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const subscriptionId = parseInt(req.params.id);
+      
+      const subscription = await storage.updateSubscription(subscriptionId, {
+        cancelAtPeriodEnd: true,
+        status: 'cancelled'
+      });
+
+      res.json(subscription);
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      res.status(500).json({ message: 'Failed to cancel subscription' });
+    }
+  });
+
+  // Wisdom points routes
+  app.get('/api/wisdom-transactions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const transactions = await storage.getWisdomTransactions(userId);
+      res.json(transactions);
+    } catch (error) {
+      console.error('Error fetching wisdom transactions:', error);
+      res.status(500).json({ message: 'Failed to fetch wisdom transactions' });
+    }
+  });
+
+  app.post('/api/wisdom-transactions', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const transaction = await storage.createWisdomTransaction({
+        ...req.body,
+        userId
+      });
+      res.json(transaction);
+    } catch (error) {
+      console.error('Error creating wisdom transaction:', error);
+      res.status(500).json({ message: 'Failed to create wisdom transaction' });
+    }
+  });
+
   const httpServer = createServer(app);
 
   // WebSocket server for real-time updates

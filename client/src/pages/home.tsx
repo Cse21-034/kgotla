@@ -6,9 +6,12 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 import MobileLayout from "@/components/mobile-layout";
 import PostCard from "@/components/post-card";
 import CreatePostModal from "@/components/create-post-modal";
+import TipModal from "@/components/tip-modal";
+import SubscriptionModal from "@/components/subscription-modal";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Bell, Globe } from "lucide-react";
+import { Plus, Search, Bell, Globe, Crown, DollarSign, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -147,6 +150,75 @@ export default function Home() {
     </section>
   ) : null;
 
+  // Premium upgrade banner for non-premium users
+  const premiumBanner = !user?.isPremium ? (
+    <section className="px-4 py-3">
+      <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-full">
+                <Crown className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  {language === 'en' ? 'Upgrade to Premium' : 'Tokafatsa go Premium'}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {language === 'en' ? 'Unlock exclusive features from $2/month' : 'Bulela dikarolo tse kgethegile go tswa ko $2/kgwedi'}
+                </p>
+              </div>
+            </div>
+            <SubscriptionModal 
+              trigger={
+                <Button size="sm" className="flex items-center gap-2">
+                  <Star className="w-4 h-4" />
+                  {language === 'en' ? 'Upgrade' : 'Tokafatsa'}
+                </Button>
+              }
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  ) : null;
+
+  // Sponsored content banner
+  const sponsoredContent = (
+    <section className="px-4 py-3">
+      <Card className="border-yellow-200 bg-yellow-50">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-2">
+            <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+              {language === 'en' ? 'Sponsored' : 'Kgwebisitšo'}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-3">
+            <img 
+              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=60&fit=crop&crop=center"
+              alt="Sponsored content"
+              className="w-12 h-12 rounded-lg object-cover"
+            />
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-900">
+                {language === 'en' ? 'Support Local Artisans' : 'Thusa Baithuti ba Selegae'}
+              </h3>
+              <p className="text-sm text-gray-600 line-clamp-2">
+                {language === 'en' 
+                  ? 'Discover authentic handmade crafts from Southern Africa. Shop now and support our community.'
+                  : 'Bona ditiro tse di dirilweng ka matsogo go tswa Aforikaborwa. Reka gompieno o thuse setšhaba sa rona.'
+                }
+              </p>
+            </div>
+            <Button variant="outline" size="sm">
+              {language === 'en' ? 'Learn More' : 'Ithute go oketsi'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+
   const content = (
     <div className="space-y-0">
       {postsLoading ? (
@@ -195,6 +267,8 @@ export default function Home() {
     <MobileLayout header={header} fab={fab}>
       {stories}
       {createPostPrompt}
+      {premiumBanner}
+      {sponsoredContent}
       {content}
       <CreatePostModal 
         isOpen={isCreatePostOpen} 

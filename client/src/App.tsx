@@ -11,6 +11,8 @@ import Search from "@/pages/search";
 import Groups from "@/pages/groups";
 import Notifications from "@/pages/notifications";
 import Profile from "@/pages/profile";
+import Settings from "@/pages/settings";
+import Marketplace from "@/pages/marketplace";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -26,6 +28,8 @@ function Router() {
           <Route path="/groups" component={Groups} />
           <Route path="/notifications" component={Notifications} />
           <Route path="/profile" component={Profile} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/marketplace" component={Marketplace} />
         </>
       )}
       <Route component={NotFound} />

@@ -7,6 +7,15 @@ import {
   notifications,
   groups,
   groupMembers,
+  subscriptions,
+  tips,
+  marketplaceItems,
+  sponsoredContent,
+  wisdomTransactions,
+  paymentSettings,
+  userPaymentMethods,
+  appConfig,
+  transactions,
   type User,
   type UpsertUser,
   type InsertPost,
@@ -21,6 +30,24 @@ import {
   type Notification,
   type InsertGroup,
   type Group,
+  type InsertSubscription,
+  type Subscription,
+  type InsertTip,
+  type Tip,
+  type InsertMarketplaceItem,
+  type MarketplaceItem,
+  type InsertSponsoredContent,
+  type SponsoredContent,
+  type InsertWisdomTransaction,
+  type WisdomTransaction,
+  type InsertPaymentSetting,
+  type PaymentSetting,
+  type InsertUserPaymentMethod,
+  type UserPaymentMethod,
+  type InsertAppConfig,
+  type AppConfig,
+  type InsertTransaction,
+  type Transaction,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, or, sql, count } from "drizzle-orm";
@@ -68,6 +95,55 @@ export interface IStorage {
 
   // Search operations
   searchPosts(query: string, limit?: number): Promise<Post[]>;
+
+  // Monetization operations
+  getSubscriptions(userId: string): Promise<Subscription[]>;
+  createSubscription(subscription: InsertSubscription): Promise<Subscription>;
+  updateSubscription(id: number, updates: Partial<Subscription>): Promise<Subscription>;
+  cancelSubscription(id: number): Promise<void>;
+
+  // Tips operations
+  getTips(userId: string): Promise<Tip[]>;
+  createTip(tip: InsertTip): Promise<Tip>;
+  updateTip(id: number, updates: Partial<Tip>): Promise<Tip>;
+
+  // Marketplace operations
+  getMarketplaceItems(limit?: number, offset?: number): Promise<MarketplaceItem[]>;
+  getMarketplaceItemById(id: number): Promise<MarketplaceItem | undefined>;
+  createMarketplaceItem(item: InsertMarketplaceItem): Promise<MarketplaceItem>;
+  updateMarketplaceItem(id: number, updates: Partial<MarketplaceItem>): Promise<MarketplaceItem>;
+  deleteMarketplaceItem(id: number): Promise<void>;
+
+  // Sponsored content operations
+  getSponsoredContent(limit?: number): Promise<SponsoredContent[]>;
+  createSponsoredContent(content: InsertSponsoredContent): Promise<SponsoredContent>;
+  updateSponsoredContent(id: number, updates: Partial<SponsoredContent>): Promise<SponsoredContent>;
+
+  // Wisdom transactions
+  getWisdomTransactions(userId: string): Promise<WisdomTransaction[]>;
+  createWisdomTransaction(transaction: InsertWisdomTransaction): Promise<WisdomTransaction>;
+  updateUserWisdomPoints(userId: string, points: number): Promise<void>;
+
+  // Payment settings
+  getPaymentSettings(): Promise<PaymentSetting[]>;
+  updatePaymentSetting(id: number, updates: Partial<PaymentSetting>): Promise<PaymentSetting>;
+  createPaymentSetting(setting: InsertPaymentSetting): Promise<PaymentSetting>;
+
+  // User payment methods
+  getUserPaymentMethods(userId: string): Promise<UserPaymentMethod[]>;
+  createUserPaymentMethod(method: InsertUserPaymentMethod): Promise<UserPaymentMethod>;
+  updateUserPaymentMethod(id: number, updates: Partial<UserPaymentMethod>): Promise<UserPaymentMethod>;
+  deleteUserPaymentMethod(id: number): Promise<void>;
+
+  // App configuration
+  getAppConfig(category?: string): Promise<AppConfig[]>;
+  updateAppConfig(key: string, value: string): Promise<AppConfig>;
+  createAppConfig(config: InsertAppConfig): Promise<AppConfig>;
+
+  // Transactions
+  getTransactions(userId: string, limit?: number): Promise<Transaction[]>;
+  createTransaction(transaction: InsertTransaction): Promise<Transaction>;
+  updateTransaction(id: number, updates: Partial<Transaction>): Promise<Transaction>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -375,6 +451,282 @@ export class DatabaseStorage implements IStorage {
       )
       .orderBy(desc(posts.createdAt))
       .limit(limit);
+  }
+
+  // Monetization operations
+  async getSubscriptions(userId: string): Promise<Subscription[]> {
+    return await db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.userId, userId))
+      .orderBy(desc(subscriptions.createdAt));
+  }
+
+  async createSubscription(subscription: InsertSubscription): Promise<Subscription> {
+    const [newSubscription] = await db.insert(subscriptions).values(subscription).returning();
+    return newSubscription;
+  }
+
+  async updateSubscription(id: number, updates: Partial<Subscription>): Promise<Subscription> {
+    const [updatedSubscription] = await db
+      .update(subscriptions)
+      .set(updates)
+      .where(eq(subscriptions.id, id))
+      .returning();
+    return updatedSubscription;
+  }
+
+  async cancelSubscription(id: number): Promise<void> {
+    await db
+      .update(subscriptions)
+      .set({ 
+        status: 'canceled',
+        canceledAt: new Date()
+      })
+      .where(eq(subscriptions.id, id));
+  }
+
+  // Tips operations
+  async getTips(userId: string): Promise<Tip[]> {
+    return await db
+      .select()
+      .from(tips)
+      .where(or(
+        eq(tips.fromUserId, userId),
+        eq(tips.toUserId, userId)
+      ))
+      .orderBy(desc(tips.createdAt));
+  }
+
+  async createTip(tip: InsertTip): Promise<Tip> {
+    const [newTip] = await db.insert(tips).values(tip).returning();
+    
+    // Update recipient's wisdom points and earnings
+    if (tip.toUserId) {
+      await db
+        .update(users)
+        .set({ 
+          wisdomPoints: sql`${users.wisdomPoints} + ${Math.floor(tip.amount / 10)}`,
+          totalEarnings: sql`${users.totalEarnings} + ${tip.amount}`
+        })
+        .where(eq(users.id, tip.toUserId));
+    }
+    
+    return newTip;
+  }
+
+  async updateTip(id: number, updates: Partial<Tip>): Promise<Tip> {
+    const [updatedTip] = await db
+      .update(tips)
+      .set(updates)
+      .where(eq(tips.id, id))
+      .returning();
+    return updatedTip;
+  }
+
+  // Marketplace operations
+  async getMarketplaceItems(limit = 20, offset = 0): Promise<MarketplaceItem[]> {
+    return await db
+      .select()
+      .from(marketplaceItems)
+      .where(eq(marketplaceItems.isActive, true))
+      .orderBy(desc(marketplaceItems.featured), desc(marketplaceItems.createdAt))
+      .limit(limit)
+      .offset(offset);
+  }
+
+  async getMarketplaceItemById(id: number): Promise<MarketplaceItem | undefined> {
+    const [item] = await db
+      .select()
+      .from(marketplaceItems)
+      .where(eq(marketplaceItems.id, id));
+    
+    if (item) {
+      // Update view count
+      await db
+        .update(marketplaceItems)
+        .set({ views: sql`${marketplaceItems.views} + 1` })
+        .where(eq(marketplaceItems.id, id));
+    }
+    
+    return item;
+  }
+
+  async createMarketplaceItem(item: InsertMarketplaceItem): Promise<MarketplaceItem> {
+    const [newItem] = await db.insert(marketplaceItems).values(item).returning();
+    return newItem;
+  }
+
+  async updateMarketplaceItem(id: number, updates: Partial<MarketplaceItem>): Promise<MarketplaceItem> {
+    const [updatedItem] = await db
+      .update(marketplaceItems)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(marketplaceItems.id, id))
+      .returning();
+    return updatedItem;
+  }
+
+  async deleteMarketplaceItem(id: number): Promise<void> {
+    await db
+      .update(marketplaceItems)
+      .set({ isActive: false })
+      .where(eq(marketplaceItems.id, id));
+  }
+
+  // Sponsored content operations
+  async getSponsoredContent(limit = 10): Promise<SponsoredContent[]> {
+    return await db
+      .select()
+      .from(sponsoredContent)
+      .where(and(
+        eq(sponsoredContent.isActive, true),
+        sql`${sponsoredContent.endDate} > NOW()`
+      ))
+      .orderBy(desc(sponsoredContent.createdAt))
+      .limit(limit);
+  }
+
+  async createSponsoredContent(content: InsertSponsoredContent): Promise<SponsoredContent> {
+    const [newContent] = await db.insert(sponsoredContent).values(content).returning();
+    return newContent;
+  }
+
+  async updateSponsoredContent(id: number, updates: Partial<SponsoredContent>): Promise<SponsoredContent> {
+    const [updatedContent] = await db
+      .update(sponsoredContent)
+      .set(updates)
+      .where(eq(sponsoredContent.id, id))
+      .returning();
+    return updatedContent;
+  }
+
+  // Wisdom transactions
+  async getWisdomTransactions(userId: string): Promise<WisdomTransaction[]> {
+    return await db
+      .select()
+      .from(wisdomTransactions)
+      .where(eq(wisdomTransactions.userId, userId))
+      .orderBy(desc(wisdomTransactions.createdAt));
+  }
+
+  async createWisdomTransaction(transaction: InsertWisdomTransaction): Promise<WisdomTransaction> {
+    const [newTransaction] = await db.insert(wisdomTransactions).values(transaction).returning();
+    
+    // Update user's wisdom points
+    if (transaction.userId) {
+      await db
+        .update(users)
+        .set({ wisdomPoints: sql`${users.wisdomPoints} + ${transaction.amount}` })
+        .where(eq(users.id, transaction.userId));
+    }
+    
+    return newTransaction;
+  }
+
+  async updateUserWisdomPoints(userId: string, points: number): Promise<void> {
+    await db
+      .update(users)
+      .set({ wisdomPoints: sql`${users.wisdomPoints} + ${points}` })
+      .where(eq(users.id, userId));
+  }
+
+  // Payment settings
+  async getPaymentSettings(): Promise<PaymentSetting[]> {
+    return await db
+      .select()
+      .from(paymentSettings)
+      .where(eq(paymentSettings.isActive, true))
+      .orderBy(paymentSettings.method);
+  }
+
+  async updatePaymentSetting(id: number, updates: Partial<PaymentSetting>): Promise<PaymentSetting> {
+    const [updatedSetting] = await db
+      .update(paymentSettings)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(paymentSettings.id, id))
+      .returning();
+    return updatedSetting;
+  }
+
+  async createPaymentSetting(setting: InsertPaymentSetting): Promise<PaymentSetting> {
+    const [newSetting] = await db.insert(paymentSettings).values(setting).returning();
+    return newSetting;
+  }
+
+  // User payment methods
+  async getUserPaymentMethods(userId: string): Promise<UserPaymentMethod[]> {
+    return await db
+      .select()
+      .from(userPaymentMethods)
+      .where(eq(userPaymentMethods.userId, userId))
+      .orderBy(desc(userPaymentMethods.isDefault), userPaymentMethods.method);
+  }
+
+  async createUserPaymentMethod(method: InsertUserPaymentMethod): Promise<UserPaymentMethod> {
+    const [newMethod] = await db.insert(userPaymentMethods).values(method).returning();
+    return newMethod;
+  }
+
+  async updateUserPaymentMethod(id: number, updates: Partial<UserPaymentMethod>): Promise<UserPaymentMethod> {
+    const [updatedMethod] = await db
+      .update(userPaymentMethods)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(userPaymentMethods.id, id))
+      .returning();
+    return updatedMethod;
+  }
+
+  async deleteUserPaymentMethod(id: number): Promise<void> {
+    await db.delete(userPaymentMethods).where(eq(userPaymentMethods.id, id));
+  }
+
+  // App configuration
+  async getAppConfig(category?: string): Promise<AppConfig[]> {
+    const query = db.select().from(appConfig);
+    
+    if (category) {
+      return await query.where(eq(appConfig.category, category));
+    }
+    
+    return await query.orderBy(appConfig.category, appConfig.key);
+  }
+
+  async updateAppConfig(key: string, value: string): Promise<AppConfig> {
+    const [updatedConfig] = await db
+      .update(appConfig)
+      .set({ value, updatedAt: new Date() })
+      .where(eq(appConfig.key, key))
+      .returning();
+    return updatedConfig;
+  }
+
+  async createAppConfig(config: InsertAppConfig): Promise<AppConfig> {
+    const [newConfig] = await db.insert(appConfig).values(config).returning();
+    return newConfig;
+  }
+
+  // Transactions
+  async getTransactions(userId: string, limit = 50): Promise<Transaction[]> {
+    return await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.userId, userId))
+      .orderBy(desc(transactions.createdAt))
+      .limit(limit);
+  }
+
+  async createTransaction(transaction: InsertTransaction): Promise<Transaction> {
+    const [newTransaction] = await db.insert(transactions).values(transaction).returning();
+    return newTransaction;
+  }
+
+  async updateTransaction(id: number, updates: Partial<Transaction>): Promise<Transaction> {
+    const [updatedTransaction] = await db
+      .update(transactions)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(transactions.id, id))
+      .returning();
+    return updatedTransaction;
   }
 }
 

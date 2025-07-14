@@ -80,7 +80,7 @@ export default function Profile() {
           <Button variant="ghost" size="sm">
             <Edit3 size={16} />
           </Button>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={() => window.location.href = "/settings"}>
             <Settings size={16} />
           </Button>
           <Button variant="ghost" size="sm" onClick={handleLogout}>

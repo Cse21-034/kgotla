@@ -5,7 +5,8 @@ import {
   Search, 
   Users, 
   Bell, 
-  User 
+  User,
+  ShoppingBag 
 } from "lucide-react";
 
 const navigationItems = [
@@ -23,6 +24,11 @@ const navigationItems = [
     path: "/groups", 
     icon: Users, 
     label: { en: "Groups", tn: "Ditlhopha" } 
+  },
+  { 
+    path: "/marketplace", 
+    icon: ShoppingBag, 
+    label: { en: "Shop", tn: "Rekisa" } 
   },
   { 
     path: "/notifications", 
