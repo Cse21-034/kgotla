@@ -14,6 +14,7 @@
     "paths": {
       "@/*": ["*"],
       "@/config/*": ["config/*"],
+      "@shared/*": ["shared/*"],
       "@/controllers/*": ["controllers/*"],
       "@/middleware/*": ["middleware/*"],
       "@/models/*": ["models/*"],
