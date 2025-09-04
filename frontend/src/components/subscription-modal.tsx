@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Crown, Star, Zap, Shield, CreditCard, Smartphone, Check, X } from "lucide-react";
+import * as React from "react";
 
 interface SubscriptionModalProps {
   trigger?: React.ReactNode;
