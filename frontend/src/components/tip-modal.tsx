@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { DollarSign, Heart, Gift, Coins, CreditCard, Smartphone } from "lucide-react";
+import * as React from "react";
 
 interface TipModalProps {
   recipientId: string;
