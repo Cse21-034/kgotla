@@ -15,6 +15,7 @@ const InputOTP = React.forwardRef<
       containerClassName
     )}
     className={cn("disabled:cursor-not-allowed", className)}
+    maxLength={6} // Add required maxLength prop
     {...props}
   />
 ))
