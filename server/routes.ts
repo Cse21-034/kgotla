@@ -16,6 +16,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // Root route for testing
+  app.get('/', (req, res) => {
+    res.json({ 
+      message: "Kgotla API Server", 
+      status: "running",
+      version: "2.0.0",
+      architecture: "separated backend/frontend",
+      endpoints: {
+        auth: "/api/auth/*",
+        health: "/api/health"
+      }
+    });
+  });
+
   // Placeholder routes for app functionality (to be implemented)
   app.get('/api/posts', (req, res) => {
     res.json({ message: "Posts endpoint - to be implemented with new architecture" });
