@@ -14,6 +14,31 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { CreditCard, Smartphone, Globe, Settings as SettingsIcon, DollarSign, Coins } from "lucide-react";
 
+// Define interfaces for type safety
+interface PaymentSetting {
+  id: number;
+  method: string;
+  isEnabled: boolean;
+  displayName: string;
+  description: string;
+  configuration: Record<string, any>;
+  supportedCurrencies: string[];
+  fees: Record<string, any>;
+  minAmount: number;
+  maxAmount: number;
+  isActive: boolean;
+}
+
+interface AppConfigItem {
+  id: number;
+  key: string;
+  value: string;
+  type: string;
+  description: string;
+  category: string;
+  isPublic: boolean;
+}
+
 const paymentMethods = [
   {
     id: "stripe",
@@ -79,12 +104,12 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState("payments");
 
   // Fetch payment settings
-  const { data: paymentSettings = [], isLoading: isLoadingSettings } = useQuery({
+  const { data: paymentSettings = [], isLoading: isLoadingSettings } = useQuery<PaymentSetting[]>({
     queryKey: ['/api/payment-settings'],
   });
 
   // Fetch app configuration
-  const { data: appConfig = [], isLoading: isLoadingConfig } = useQuery({
+  const { data: appConfig = [], isLoading: isLoadingConfig } = useQuery<AppConfigItem[]>({
     queryKey: ['/api/app-config'],
   });
 
@@ -149,7 +174,7 @@ export default function Settings() {
   });
 
   const handlePaymentMethodToggle = (methodId: string, enabled: boolean) => {
-    const existingSetting = paymentSettings.find((ps: any) => ps.method === methodId);
+    const existingSetting = paymentSettings.find((ps) => ps.method === methodId);
     
     if (existingSetting) {
       updatePaymentSetting.mutate({
@@ -175,7 +200,7 @@ export default function Settings() {
   };
 
   const handlePaymentMethodConfig = (methodId: string, config: any) => {
-    const existingSetting = paymentSettings.find((ps: any) => ps.method === methodId);
+    const existingSetting = paymentSettings.find((ps) => ps.method === methodId);
     
     if (existingSetting) {
       updatePaymentSetting.mutate({
@@ -187,7 +212,7 @@ export default function Settings() {
 
   const PaymentMethodCard = ({ method }: { method: any }) => {
     const [config, setConfig] = useState<any>({});
-    const existingSetting = paymentSettings.find((ps: any) => ps.method === method.id);
+    const existingSetting = paymentSettings.find((ps) => ps.method === method.id);
     const isEnabled = existingSetting?.isEnabled || false;
 
     return (
