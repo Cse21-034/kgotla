@@ -116,6 +116,10 @@ VITE_APP_DESCRIPTION=A community discussion platform
 
 ### Step 2: Deploy Frontend
 
+**Important**: Before deploying, ensure these files exist in your frontend directory:
+- `tsconfig.node.json` (for TypeScript configuration)
+- `src/assets/` directory (for static assets)
+
 1. **Deploy via Vercel CLI** (Recommended):
    ```bash
    npm i -g vercel
