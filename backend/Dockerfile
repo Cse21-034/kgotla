@@ -6,14 +6,16 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json if it exists
+# Copy package files
 COPY package*.json ./
 
 # Install all dependencies including dev (for TypeScript build)
 RUN npm install
 
-# Copy all source files
-COPY . .
+# Copy TypeScript config files and other configs first
+COPY tsconfig*.json ./
+COPY prisma ./prisma   # if using Prisma, adjust accordingly
+COPY src ./src
 
 # Build the app (TypeScript -> JavaScript)
 RUN npm run build
@@ -38,10 +40,13 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
+# Copy any runtime config files needed
+COPY --from=builder /app/prisma ./prisma   # optional, if Prisma used
+
 # Set user
 USER nodejs
 
-# Expose your app port (update if needed)
+# Expose your app port
 EXPOSE 3000
 
 # Start the app
