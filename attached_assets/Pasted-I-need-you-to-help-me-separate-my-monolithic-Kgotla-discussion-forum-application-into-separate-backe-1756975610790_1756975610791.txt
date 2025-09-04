@@ -1,0 +1,208 @@
+I need you to help me separate my monolithic Kgotla discussion forum application into separate backend and frontend projects, and implement comprehensive authentication including Google OAuth and email/password login.
+
+## Current Architecture Analysis
+
+My current project structure is:
+- Monolithic Express.js app with React frontend
+- Uses Replit Auth (OpenID Connect)
+- PostgreSQL database with Drizzle ORM
+- TanStack Query for state management
+- Existing user authentication and forum features
+
+## Requirements
+
+### Backend Requirements (Deploy to Render):
+1. Separate Express.js backend with TypeScript
+2. Google OAuth 2.0 integration using Passport.js
+3. Email/password authentication with bcrypt
+4. JWT token-based authentication for API calls
+5. Email verification system with nodemailer
+6. Password reset functionality
+7. Enhanced security with helmet, cors, rate limiting
+8. PostgreSQL session storage
+9. RESTful API design
+10. WebSocket support for real-time features
+
+### Frontend Requirements (Separate deployment):
+1. React frontend with TypeScript and Vite
+2. Axios API client with interceptors
+3. Authentication state management
+4. Login/register forms for email/password
+5. Google OAuth integration
+6. JWT token storage and management
+7. Protected routes and auth guards
+8. Responsive design with Tailwind CSS
+
+### Database Schema Updates:
+1. Enhanced users table with authentication fields
+2. Support for multiple OAuth providers (Google, email)
+3. Email verification tokens and password reset tokens
+4. User preferences and profile enhancements
+
+## Task Breakdown
+
+Please help me with these specific tasks:
+
+1. **Project Structure Setup**
+   - Create separate backend and frontend folder structures
+   - Configure package.json files for both projects
+   - Set up TypeScript configurations
+   - Configure build and deployment scripts
+
+2. **Backend Implementation**
+   - Create Express.js server with proper middleware setup
+   - Implement Passport.js strategies for Google OAuth and local authentication
+   - Set up JWT token generation and validation
+   - Create authentication routes and middleware
+   - Implement email service for verification and password reset
+   - Set up database connection and enhanced schema
+   - Create comprehensive API routes for all forum features
+
+3. **Frontend Implementation**
+   - Set up React project with Vite
+   - Create API client with authentication interceptors
+   - Implement authentication context and hooks
+   - Create login/register components with forms
+   - Set up Google OAuth button and flow
+   - Implement protected routes and navigation
+   - Migrate existing components to work with new API
+
+4. **Authentication Flow Implementation**
+   - Email/password registration with verification
+   - Google OAuth login and account linking
+   - JWT token refresh mechanism
+   - Password reset via email
+   - Session management and logout
+
+5. **Security and Best Practices**
+   - Input validation with Zod
+   - Rate limiting implementation
+   - CORS configuration for production
+   - Environment variable management
+   - Error handling and logging
+
+6. **Deployment Configuration**
+   - Render backend deployment setup
+   - Frontend deployment configuration (Vercel/Netlify)
+   - Environment variables for production
+   - Database migration scripts
+
+## Code Migration Strategy
+
+For each file I provide, please:
+1. Analyze the current implementation
+2. Determine if it belongs to backend, frontend, or shared
+3. Refactor for the new architecture
+4. Update imports and dependencies
+5. Enhance with new authentication features
+6. Ensure proper error handling and validation
+
+## Expected Output Format
+
+For each task, provide:
+1. Complete file implementations with proper TypeScript types
+2. Detailed explanation of changes made
+3. Installation commands for new dependencies
+4. Configuration instructions
+5. Testing recommendations
+6. Deployment notes
+
+## Authentication Flows to Implement
+
+1. **Email/Password Registration:**
+   - User registers → Email verification sent → Account activated → Login
+
+2. **Google OAuth:**
+   - User clicks Google login → OAuth flow → Account created/linked → JWT returned
+
+3. **Password Reset:**
+   - User requests reset → Email sent → Token verified → Password updated
+
+4. **Session Management:**
+   - JWT tokens with refresh mechanism
+   - Secure logout on all devices
+   - Token expiration handling
+
+## File Priority Order
+
+Please process files in this order:
+1. Database schema and configuration files
+2. Backend authentication and middleware
+3. Backend API routes and services
+4. Frontend API client and authentication hooks
+5. Frontend components and pages
+6. Configuration and deployment files
+
+Start with the most critical authentication and database files first, then work through the application features.
+
+Please ask for clarification if you need more details about any specific aspect of the current implementation or desired functionality.
+Follow-up Prompts for SOLID Implementation
+For Interface Design and Architecture:
+Design the complete interface architecture for my application following SOLID principles. Include:
+- Repository interfaces for all entities (User, Post, Comment, etc.)
+- Service interfaces for business logic (AuthService, PostService, NotificationService)
+- Strategy interfaces for authentication providers
+- Factory interfaces for creating services and strategies
+- Dependency injection container configuration
+
+Show how each interface adheres to ISP and how implementations follow SRP.
+For Backend Service Layer with SOLID:
+Create a complete service layer following SOLID principles:
+- UserService with single responsibility for user operations
+- AuthService depending on abstractions (IUserRepository, IEmailService, ITokenService)
+- PostService with clear separation of concerns
+- Strategy pattern for authentication (Local, Google, Future providers)
+- Repository pattern with interface segregation
+- Dependency injection setup with container (inversify or similar)
+
+Include unit tests showing how to mock dependencies.
+For Authentication System with Strategy Pattern:
+Implement authentication using Strategy and Factory patterns:
+- Abstract AuthStrategy base class
+- LocalAuthStrategy and GoogleAuthStrategy implementations
+- AuthStrategyFactory for creating appropriate strategies
+- AuthService that depends on strategy abstractions
+- Token management as a separate service (SRP)
+- Email verification as a separate concern
+
+Show how to add new OAuth providers without modifying existing code (OCP).
+For Repository Pattern Implementation:
+Create repository layer following Repository pattern and SOLID principles:
+- Abstract repository interfaces for each entity
+- Separate read and write interfaces where beneficial (ISP)
+- Concrete Drizzle implementations
+- Unit of Work pattern for transactions
+- Query builder as separate concerns
+- Database connection as injected dependency
+
+Include examples of swapping database implementations (LSP).
+For Frontend Component Architecture:
+Design React frontend following SOLID principles:
+- Component composition over inheritance
+- Single responsibility components
+- HOC pattern for cross-cutting concerns (auth guards, error boundaries)
+- Custom hooks for specific concerns (useAuth, useApi, usePosts)
+- Service classes for API calls (separate from components)
+- Context providers with focused responsibilities
+
+Show how components depend on abstractions through dependency injection.
+For Dependency Injection Setup:
+Create complete dependency injection container setup:
+- Container configuration (inversify, awilix, or manual DI)
+- Service registration and lifecycle management
+- Interface to implementation bindings
+- Environment-specific configurations
+- Testing container setup with mock implementations
+- Express.js integration with DI container
+
+Include examples of injecting services into controllers and middleware.
+For Extension and Testing Examples:
+Provide examples showing extensibility and testing:
+- Adding new OAuth provider without changing existing code
+- Adding new post types following OCP
+- Swapping database from PostgreSQL to MongoDB
+- Unit testing with dependency injection and mocks
+- Integration testing with test containers
+- Performance testing with different implementations
+
+Show how SOLID principles make testing and extension easier.
