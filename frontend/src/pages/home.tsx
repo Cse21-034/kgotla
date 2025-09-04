@@ -6,10 +6,9 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 import MobileLayout from "@/components/mobile-layout";
 import PostCard from "@/components/post-card";
 import CreatePostModal from "@/components/create-post-modal";
-import TipModal from "@/components/tip-modal";
 import SubscriptionModal from "@/components/subscription-modal";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Bell, Globe, Crown, DollarSign, Star } from "lucide-react";
+import { Plus, Search, Bell, Globe, Crown, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -102,7 +101,7 @@ export default function Home() {
           <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full p-0.5">
             <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
               <img 
-                src={user.profileImageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.firstName || "User")}
+                src={(user as any)?.profileImageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent((user as any)?.firstName || "User")}
                 alt="Your story" 
                 className="w-14 h-14 rounded-full object-cover"
               />
@@ -133,7 +132,7 @@ export default function Home() {
     <section className="px-4 py-3 bg-white border-b border-gray-200">
       <div className="flex items-center space-x-3">
         <img 
-          src={user.profileImageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.firstName || "User")}
+          src={(user as any)?.profileImageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent((user as any)?.firstName || "User")}
           alt="Your profile" 
           className="w-10 h-10 rounded-full object-cover"
         />
@@ -151,7 +150,7 @@ export default function Home() {
   ) : null;
 
   // Premium upgrade banner for non-premium users
-  const premiumBanner = !user?.isPremium ? (
+  const premiumBanner = !(user as any)?.isPremium ? (
     <section className="px-4 py-3">
       <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
         <CardContent className="p-4">
@@ -226,8 +225,8 @@ export default function Home() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="text-gray-500 mt-2">Loading posts...</p>
         </div>
-      ) : posts && posts.length > 0 ? (
-        posts.map((post: any) => (
+      ) : posts && (posts as any)?.length > 0 ? (
+        (posts as any)?.map((post: any) => (
           <PostCard key={post.id} post={post} />
         ))
       ) : (

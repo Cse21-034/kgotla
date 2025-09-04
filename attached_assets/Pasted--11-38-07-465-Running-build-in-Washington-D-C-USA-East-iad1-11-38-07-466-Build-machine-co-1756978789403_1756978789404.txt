@@ -1,0 +1,96 @@
+[11:38:07.465] Running build in Washington, D.C., USA (East) – iad1
+[11:38:07.466] Build machine configuration: 2 cores, 8 GB
+[11:38:07.481] Cloning github.com/Cse21-034/kgotla (Branch: main, Commit: 02727b2)
+[11:38:07.620] Previous build caches not available
+[11:38:07.799] Cloning completed: 318.000ms
+[11:38:08.237] Running "vercel build"
+[11:38:08.620] Vercel CLI 47.0.4
+[11:38:09.222] Installing dependencies...
+[11:38:36.923] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[11:38:37.005] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[11:38:37.252] npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+[11:38:37.367] npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+[11:38:37.595] npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+[11:38:40.415] npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[11:38:42.468] 
+[11:38:42.469] added 430 packages in 33s
+[11:38:42.469] 
+[11:38:42.469] 82 packages are looking for funding
+[11:38:42.470]   run `npm fund` for details
+[11:38:42.638] 
+[11:38:42.639] > kgotla-frontend@1.0.0 build
+[11:38:42.639] > tsc && vite build
+[11:38:42.640] 
+[11:38:51.272] src/components/auth/LoginForm.tsx(61,43): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+[11:38:51.273] src/components/auth/ProtectedRoute.tsx(3,10): error TS2305: Module '"wouter"' has no exported member 'Navigate'.
+[11:38:51.273] src/components/auth/ProtectedRoute.tsx(16,12): error TS6133: 'setLocation' is declared but its value is never read.
+[11:38:51.273] src/components/auth/RegisterForm.tsx(88,43): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+[11:38:51.274] src/components/comment-sheet.tsx(26,17): error TS6133: 'comments' is declared but its value is never read.
+[11:38:51.274] src/components/comment-sheet.tsx(217,26): error TS2339: Property 'profileImageUrl' does not exist on type '{}'.
+[11:38:51.274] src/components/comment-sheet.tsx(217,106): error TS2339: Property 'firstName' does not exist on type '{}'.
+[11:38:51.275] src/components/create-post-modal.tsx(13,1): error TS6192: All imports in import declaration are unused.
+[11:38:51.276] src/components/create-post-modal.tsx(49,9): error TS6133: 'user' is declared but its value is never read.
+[11:38:51.276] src/components/create-post-modal.tsx(61,10): error TS6133: 'imageFile' is declared but its value is never read.
+[11:38:51.276] src/components/subscription-modal.tsx(10,67): error TS6133: 'X' is declared but its value is never read.
+[11:38:51.276] src/components/tip-modal.tsx(10,29): error TS6133: 'CardDescription' is declared but its value is never read.
+[11:38:51.277] src/components/tip-modal.tsx(13,35): error TS6133: 'Coins' is declared but its value is never read.
+[11:38:51.277] src/components/tip-modal.tsx(50,17): error TS6133: 'data' is declared but its value is never read.
+[11:38:51.277] src/hooks/useComments.ts(7,9): error TS6133: 'toast' is declared but its value is never read.
+[11:38:51.277] src/hooks/useComments.ts(33,17): error TS6133: 'data' is declared but its value is never read.
+[11:38:51.278] src/hooks/useComments.ts(144,17): error TS6133: 'data' is declared but its value is never read.
+[11:38:51.278] src/hooks/useComments.ts(144,23): error TS6133: 'variables' is declared but its value is never read.
+[11:38:51.278] src/hooks/usePosts.ts(7,9): error TS6133: 'toast' is declared but its value is never read.
+[11:38:51.278] src/hooks/usePosts.ts(18,9): error TS6133: 'toast' is declared but its value is never read.
+[11:38:51.278] src/hooks/usePosts.ts(36,17): error TS6133: 'data' is declared but its value is never read.
+[11:38:51.278] src/hooks/usePosts.ts(209,9): error TS6133: 'toast' is declared but its value is never read.
+[11:38:51.278] src/lib/api.ts(5,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+[11:38:51.278] src/pages/groups.tsx(12,17): error TS6133: 'groups' is declared but its value is never read.
+[11:38:51.278] src/pages/home.tsx(9,1): error TS6133: 'TipModal' is declared but its value is never read.
+[11:38:51.278] src/pages/home.tsx(12,44): error TS6133: 'DollarSign' is declared but its value is never read.
+[11:38:51.278] src/pages/home.tsx(105,27): error TS2339: Property 'profileImageUrl' does not exist on type '{}'.
+[11:38:51.278] src/pages/home.tsx(105,108): error TS2339: Property 'firstName' does not exist on type '{}'.
+[11:38:51.279] src/pages/home.tsx(136,21): error TS2339: Property 'profileImageUrl' does not exist on type '{}'.
+[11:38:51.279] src/pages/home.tsx(136,102): error TS2339: Property 'firstName' does not exist on type '{}'.
+[11:38:51.279] src/pages/home.tsx(154,32): error TS2339: Property 'isPremium' does not exist on type '{}'.
+[11:38:51.279] src/pages/home.tsx(229,26): error TS2339: Property 'length' does not exist on type '{}'.
+[11:38:51.279] src/pages/home.tsx(230,15): error TS2339: Property 'map' does not exist on type '{}'.
+[11:38:51.279] src/pages/marketplace.tsx(8,29): error TS6133: 'CardHeader' is declared but its value is never read.
+[11:38:51.279] src/pages/marketplace.tsx(8,41): error TS6133: 'CardTitle' is declared but its value is never read.
+[11:38:51.279] src/pages/marketplace.tsx(20,3): error TS6133: 'Filter' is declared but its value is never read.
+[11:38:51.279] src/pages/marketplace.tsx(24,3): error TS6133: 'Calendar' is declared but its value is never read.
+[11:38:51.279] src/pages/marketplace.tsx(25,3): error TS6133: 'DollarSign' is declared but its value is never read.
+[11:38:51.279] src/pages/marketplace.tsx(111,28): error TS6133: 'isLoading' is declared but its value is never read.
+[11:38:51.279] src/pages/notifications.tsx(18,17): error TS6133: 'notifications' is declared but its value is never read.
+[11:38:51.279] src/pages/profile.tsx(3,1): error TS6133: 'isUnauthorizedError' is declared but its value is never read.
+[11:38:51.279] src/pages/profile.tsx(6,29): error TS6133: 'CardHeader' is declared but its value is never read.
+[11:38:51.280] src/pages/profile.tsx(6,41): error TS6133: 'CardTitle' is declared but its value is never read.
+[11:38:51.280] src/pages/profile.tsx(14,3): error TS6133: 'TrendingUp' is declared but its value is never read.
+[11:38:51.280] src/pages/profile.tsx(139,23): error TS2339: Property 'profileImageUrl' does not exist on type '{}'.
+[11:38:51.280] src/pages/profile.tsx(139,102): error TS2339: Property 'firstName' does not exist on type '{}'.
+[11:38:51.280] src/pages/profile.tsx(146,23): error TS2339: Property 'firstName' does not exist on type '{}'.
+[11:38:51.280] src/pages/profile.tsx(146,40): error TS2339: Property 'lastName' does not exist on type '{}'.
+[11:38:51.280] src/pages/profile.tsx(148,21): error TS2339: Property 'isVerified' does not exist on type '{}'.
+[11:38:51.280] src/pages/profile.tsx(155,19): error TS2339: Property 'verificationBadge' does not exist on type '{}'.
+[11:38:51.280] src/pages/profile.tsx(156,52): error TS2339: Property 'verificationBadge' does not exist on type '{}'.
+[11:38:51.281] src/pages/profile.tsx(157,23): error TS2339: Property 'verificationBadge' does not exist on type '{}'.
+[11:38:51.282] src/pages/profile.tsx(157,72): error TS2339: Property 'verificationBadge' does not exist on type '{}'.
+[11:38:51.282] src/pages/profile.tsx(162,21): error TS2339: Property 'location' does not exist on type '{}'.
+[11:38:51.282] src/pages/profile.tsx(165,31): error TS2339: Property 'location' does not exist on type '{}'.
+[11:38:51.282] src/pages/profile.tsx(170,65): error TS2339: Property 'createdAt' does not exist on type '{}'.
+[11:38:51.282] src/pages/profile.tsx(176,15): error TS2339: Property 'bio' does not exist on type '{}'.
+[11:38:51.282] src/pages/profile.tsx(177,67): error TS2339: Property 'bio' does not exist on type '{}'.
+[11:38:51.282] src/pages/search.tsx(15,3): error TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+[11:38:51.282] src/pages/search.tsx(111,46): error TS2339: Property 'length' does not exist on type '{}'.
+[11:38:51.282] src/pages/search.tsx(114,32): error TS2339: Property 'length' does not exist on type '{}'.
+[11:38:51.282] src/pages/search.tsx(116,30): error TS2339: Property 'map' does not exist on type '{}'.
+[11:38:51.282] src/pages/settings.tsx(8,1): error TS6133: 'Textarea' is declared but its value is never read.
+[11:38:51.282] src/pages/settings.tsx(9,1): error TS6192: All imports in import declaration are unused.
+[11:38:51.282] src/pages/settings.tsx(15,53): error TS6133: 'SettingsIcon' is declared but its value is never read.
+[11:38:51.282] src/pages/settings.tsx(15,79): error TS6133: 'Coins' is declared but its value is never read.
+[11:38:51.286] src/pages/settings.tsx(87,17): error TS6133: 'appConfig' is declared but its value is never read.
+[11:38:51.286] src/pages/settings.tsx(132,9): error TS6133: 'updateAppConfig' is declared but its value is never read.
+[11:38:51.286] src/pages/settings.tsx(152,29): error TS18046: 'paymentSettings' is of type 'unknown'.
+[11:38:51.286] src/pages/settings.tsx(178,29): error TS18046: 'paymentSettings' is of type 'unknown'.
+[11:38:51.287] src/pages/settings.tsx(190,29): error TS18046: 'paymentSettings' is of type 'unknown'.
+[11:38:51.287] src/pages/settings.tsx(243,48): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+[11:38:51.312] Error: Command "npm run build" exited with 2

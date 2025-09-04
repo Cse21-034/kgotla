@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Navigate, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -27,11 +27,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    setLocation('/login');
+    return null;
   }
 
   if (requireVerification && user && !user.isEmailVerified) {
-    return <Navigate to="/verify-email" replace />;
+    setLocation('/verify-email');
+    return null;
   }
 
   return <>{children}</>;
