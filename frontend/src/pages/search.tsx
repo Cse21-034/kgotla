@@ -7,6 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search as SearchIcon, Filter, TrendingUp } from "lucide-react";
 
+// Define interfaces for type safety
+interface SearchResult {
+  id: number;
+  title: string;
+  content: string;
+  authorId: string;
+  createdAt: string;
+  upvotes: number;
+  downvotes: number;
+  commentCount: number;
+}
+
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -20,7 +32,7 @@ export default function Search() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const { data: searchResults, isLoading: searchLoading } = useQuery({
+  const { data: searchResults, isLoading: searchLoading } = useQuery<SearchResult[]>({
     queryKey: ["/api/search", { q: debouncedQuery }],
     enabled: debouncedQuery.length > 0,
   });
@@ -113,7 +125,7 @@ export default function Search() {
               <p className="text-sm text-gray-600 mb-4">
                 {searchResults.length} results for "{searchQuery}"
               </p>
-              {searchResults.map((post: any) => (
+              {searchResults.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
