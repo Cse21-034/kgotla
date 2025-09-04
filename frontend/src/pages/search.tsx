@@ -10,13 +10,18 @@ import { Search as SearchIcon, Filter, TrendingUp } from "lucide-react";
 // Define interfaces for type safety
 interface SearchResult {
   id: number;
-  title: string;
+  title?: string;
   content: string;
   authorId: string;
+  type: string;
+  isAnonymous: boolean;
   createdAt: string;
   upvotes: number;
   downvotes: number;
   commentCount: number;
+  imageUrl?: string;
+  pollOptions?: any;
+  tags?: string[];
 }
 
 export default function Search() {
