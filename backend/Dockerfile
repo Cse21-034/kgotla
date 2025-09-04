@@ -1,44 +1,49 @@
-# ------------------------------
-# Builder stage
-# ------------------------------
+# -----------------------------
+# Stage 1: Build
+# -----------------------------
 FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package.json and package-lock.json if it exists
 COPY package*.json ./
 
-# Install all dependencies (including dev)
-RUN npm ci
+# Install all dependencies including dev (for TypeScript build)
+RUN npm install
 
-# Copy source code
+# Copy all source files
 COPY . .
 
-# Build the TypeScript project
+# Build the app (TypeScript -> JavaScript)
 RUN npm run build
 
-# ------------------------------
-# Production stage
-# ------------------------------
+# -----------------------------
+# Stage 2: Production
+# -----------------------------
 FROM node:18-alpine AS production
 
 # Install dumb-init for proper process handling
 RUN apk add --no-cache dumb-init
 
-# Create node user
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+# Create a non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
 
 # Set working directory
 WORKDIR /app
 
-# Copy only necessary files from builder
-COPY --from=builder /app/dist ./dist
+# Copy only built files and package.json (no dev dependencies)
 COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
-# Switch to non-root user
+# Set user
 USER nodejs
 
-# Command to start the app
-CMD ["dumb-init", "node", "dist/index.js"]
+# Expose your app port (update if needed)
+EXPOSE 3000
+
+# Start the app
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "dist/index.js"]
